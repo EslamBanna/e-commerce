@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Jobs;
+
+use App\Mail\EmailTemplateToStudents;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Mail;
+
+class JopSendEmailToUser implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
+    public $data ;
+    public function __construct($dataIn)
+    {
+        $this->data = $dataIn;
+
+    }
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle($dataIn)
+    {
+        foreach($this->data as $user){
+            Mail::to($user->email)->send(new EmailTemplateToStudents());
+        }
+    }
+}
